@@ -98,11 +98,12 @@ public class DmHomePageHelper extends SharedElementsHelper {
     }
 
     public WebElement getDmHeader() {
-        waitForElementToBeClickable(dmHeader);
+        waitForElementToAppearWithFindElement(dmHeader);
         return dmHeader;
     }
 
     public WebElement getLoginForm() {
+        waitForElementToAppearWithFindElement(loginForm);
         return loginForm;
     }
 
