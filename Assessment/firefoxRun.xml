@@ -1,0 +1,15 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="All Test Suite" parallel="tests" thread-count="4">
+
+    <listeners>
+        <listener class-name="DmTask.TestHelpers.Listeners"></listener>
+    </listeners>
+
+    <test name="FirefoxTest">
+        <parameter name="browser" value="firefox" />
+        <classes>
+            <class name="DmTask.TestScenarios.DMTestCases"/>
+        </classes>
+    </test>
+
+</suite>
