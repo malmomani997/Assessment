@@ -16,7 +16,7 @@ public class ExtentReporterNG {
 
         // Add system information
         extent.setSystemInfo("Tester", "Mohammad");
-        extent.setSystemInfo("Browser", "Chrome");
+        extent.setSystemInfo("Browser", "Chrome And Firefox");
         extent.setSystemInfo("Environment", "QA");
 
         return extent;
