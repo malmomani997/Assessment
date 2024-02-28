@@ -18,7 +18,24 @@ This project contains automated tests for a web application. The tests are imple
 - Apache POI
 
 ## Running the Tests Locally
--  mvn test
+-  prerequisite :- make sure to comment the following code when you run it locally
+- comment all the Chrome options
+        options.addArguments("--headless"); 
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-gpu"); 
+        options.setBinary("/usr/bin/google-chrome");
+        options.addArguments("--remote-allow-origins=*"); 
+        options.addArguments("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3");
+
+- comment all the Firefox options
+
+        options.addArguments("--headless");
+        options.addArguments("--window-size=1920,1080");
+        profile.setPreference("general.useragent.override", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3");
+        System.setProperty("webdriver.firefox.bin", "/usr/bin/firefox");
+  
+-  Navigate to the project directory on CMD
+-  Run the following command :- mvn test
 
 # TestNG Configuration
 - `chromeRun.xml` file is used to configure the TestNG test suite.
