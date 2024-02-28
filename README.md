@@ -47,7 +47,7 @@ This project contains automated tests for a web application. The tests are imple
 # Project Structure
 - `src`: Contains the main source code.
 - `pom.xml`: Maven project configuration.
-- `chromeRun.xml`: TestNG suite XML for Chrome browser.
+- `ChromeAndFirefoxRun.xml`: TestNG suite XML for Chrome browser.
 
 # Test Classes
 - `DMTestCases`: Contains various test scenarios for a web application.
