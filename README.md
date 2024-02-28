@@ -1,7 +1,7 @@
-# DM Task
+# Assessment
 
 ## Overview
-This project contains automated tests for the DM web application. The tests are implemented using Selenium and TestNG.
+This project contains automated tests for a web application. The tests are implemented using Selenium and TestNG.
 
 ## Prerequisites
 - Java JDK 8 or higher
@@ -18,7 +18,25 @@ This project contains automated tests for the DM web application. The tests are 
 - Apache POI
 
 ## Running the Tests Locally
--  mvn test
+-  prerequisite :- make sure to comment the following code when you run it locally as the following options are only enabled when you want to run your docker file
+- comment all the Chrome options
+
+        options.addArguments("--headless"); 
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-gpu"); 
+        options.setBinary("/usr/bin/google-chrome");
+        options.addArguments("--remote-allow-origins=*"); 
+        options.addArguments("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3");
+
+- comment all the Firefox options
+
+        options.addArguments("--headless");
+        options.addArguments("--window-size=1920,1080");
+        profile.setPreference("general.useragent.override", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3");
+        System.setProperty("webdriver.firefox.bin", "/usr/bin/firefox");
+  
+-  Navigate to the project directory on CMD
+-  Run the following command :- mvn test
 
 # TestNG Configuration
 - `chromeRun.xml` file is used to configure the TestNG test suite.
@@ -32,7 +50,7 @@ This project contains automated tests for the DM web application. The tests are 
 - `chromeRun.xml`: TestNG suite XML for Chrome browser.
 
 # Test Classes
-- `DMTestCases`: Contains various test scenarios for the DM web application.
+- `DMTestCases`: Contains various test scenarios for a web application.
 
 # Helper Classes
 - `BaseTest`: Sets up WebDriver, manages test setup and teardown, and provides helper methods.
