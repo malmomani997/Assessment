@@ -20,6 +20,7 @@ This project contains automated tests for a web application. The tests are imple
 ## Running the Tests Locally
 -  prerequisite :- make sure to comment the following code when you run it locally
 - comment all the Chrome options
+
         options.addArguments("--headless"); 
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-gpu"); 
