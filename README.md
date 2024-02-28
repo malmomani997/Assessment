@@ -41,9 +41,6 @@ This project contains automated tests for a web application. The tests are imple
 # TestNG Configuration
 - `ChromeAndFirefoxRun.xml` file is used to configure the TestNG test suite.
 
-# Browser Configuration
-- Chrome browser is configured by default. You can switch browsers by changing the `env_browser_param` value.
-
 # Project Structure
 - `src`: Contains the main source code.
 - `pom.xml`: Maven project configuration.
