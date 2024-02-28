@@ -65,3 +65,8 @@ This project contains automated tests for a web application. The tests are imple
 
 # Docker Configuration
 - The project includes a Dockerfile for containerization.
+- Steps to run the dockerfile : - 
+
+1- install docker on your machine 
+2- Navigate to the project on intilij 
+3- Run the docker file 
