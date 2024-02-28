@@ -18,7 +18,7 @@ This project contains automated tests for a web application. The tests are imple
 - Apache POI
 
 ## Running the Tests Locally
--  prerequisite :- make sure to comment the following code when you run it locally
+-  prerequisite :- make sure to comment the following code when you run it locally as the following options are only enabled when you want to run your docker file
 - comment all the Chrome options
 
         options.addArguments("--headless"); 
