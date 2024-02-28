@@ -1,7 +1,7 @@
-# DM Task
+# Assessment
 
 ## Overview
-This project contains automated tests for the DM web application. The tests are implemented using Selenium and TestNG.
+This project contains automated tests for a web application. The tests are implemented using Selenium and TestNG.
 
 ## Prerequisites
 - Java JDK 8 or higher
@@ -32,7 +32,7 @@ This project contains automated tests for the DM web application. The tests are 
 - `chromeRun.xml`: TestNG suite XML for Chrome browser.
 
 # Test Classes
-- `DMTestCases`: Contains various test scenarios for the DM web application.
+- `DMTestCases`: Contains various test scenarios for a web application.
 
 # Helper Classes
 - `BaseTest`: Sets up WebDriver, manages test setup and teardown, and provides helper methods.
