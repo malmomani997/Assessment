@@ -42,6 +42,7 @@ public class DMTestCases extends BaseTest {
     @Test(dataProvider = "searchData" , retryAnalyzer = Retry.class)
     public void searchEngineNewsTest(String searchText){
         Assert.assertTrue(getDmHomePageHelper().elementIsDisplayed(getDmHomePageHelper().getDmHeader()) , "the header in the home page wasn't displayed");
+        getDmHomePageHelper().getSearchFiled().click();
         getDmHomePageHelper().getSearchFiled().sendKeys(searchText);
         Assert.assertTrue(getDmSearchPageHelper().elementIsDisplayed(getDmSearchPageHelper().getSearchResultBox()) , "Search results box wasn't displayed");
         getDmHomePageHelper().getSearchAutoCompleteFirstResult().click();
