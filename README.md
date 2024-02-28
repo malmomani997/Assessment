@@ -39,7 +39,7 @@ This project contains automated tests for a web application. The tests are imple
 -  Run the following command :- mvn test
 
 # TestNG Configuration
-- `chromeRun.xml` file is used to configure the TestNG test suite.
+- `ChromeAndFirefoxRun.xml` file is used to configure the TestNG test suite.
 
 # Browser Configuration
 - Chrome browser is configured by default. You can switch browsers by changing the `env_browser_param` value.
