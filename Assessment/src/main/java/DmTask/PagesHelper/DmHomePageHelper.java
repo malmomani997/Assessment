@@ -78,6 +78,7 @@ public class DmHomePageHelper extends SharedElementsHelper {
 
     public WebElement getSearchAutoCompleteFirstResult() {
         waitForElementToAppearWithFindElement(searchAutoCompleteFirstResult);
+        waitForElementToBeClickable(searchAutoCompleteFirstResult);
         return searchAutoCompleteFirstResult;
     }
 

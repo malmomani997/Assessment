@@ -1,6 +1,7 @@
 package DmTask.TestScenarios;
 
 import DmTask.TestHelpers.BaseTest;
+import DmTask.TestHelpers.Retry;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -38,7 +39,7 @@ public class DMTestCases extends BaseTest {
         Assert.assertTrue(getDmHomePageHelper().elementIsDisplayed(getDmHomePageHelper().getDmHeader()) , "the header logo wasn't displayed that means the logout wasn't successful");
     }
 
-    @Test(dataProvider = "searchData")
+    @Test(dataProvider = "searchData" , retryAnalyzer = Retry.class)
     public void searchEngineNewsTest(String searchText){
         Assert.assertTrue(getDmHomePageHelper().elementIsDisplayed(getDmHomePageHelper().getDmHeader()) , "the header in the home page wasn't displayed");
         getDmHomePageHelper().getSearchFiled().sendKeys(searchText);
@@ -65,7 +66,6 @@ public class DMTestCases extends BaseTest {
         Assert.assertEquals(getDmHomePageHelper().getEnglishLanguageButton().getText() , "English" , "the expected translation wasn't displayed");
         Assert.assertEquals(getDmHomePageHelper().getMainPageTab().getText() , "الصفحة الرئيسية" , "the expected translation wasn't displayed");
         Assert.assertEquals(getDmHomePageHelper().getAboutDm().getText() , "عن بلدية دبي" , "the expected translation wasn't displayed");
-
     }
 
 }

@@ -28,7 +28,7 @@ import java.util.*;
 
 public class BaseTest {
 
-    private static WebDriver driver;
+    private static ThreadLocal<WebDriver> driverThreadLocal = new ThreadLocal<>();
 
     private DmHomePageHelper dmHomePageHelper;
 
@@ -38,8 +38,8 @@ public class BaseTest {
 
     private DmServicesPageHelper dmServicesPageHelper;
 
-    private static final String GLOBAL_DATA_PATH = "//src/main/java/DmTask/Resources/GlobalData.properties";
-    private static final String EXCEL_FILE_PATH = "//src/main/java/DmTask/Resources/TestData.xlsx";
+    private static final String GLOBAL_DATA_PATH = "/src/main/java/DmTask/Resources/GlobalData.properties";
+    private static final String EXCEL_FILE_PATH = "/src/main/java/DmTask/Resources/TestData.xlsx";
     private static final String REPORTS_PATH = "/reports/";
     private static final String SCREENSHOTS_PATH = "/screenshots/";
 
@@ -57,8 +57,8 @@ public class BaseTest {
             captureScreenshot(result.getMethod().getMethodName());
         }
 
-        if (driver != null) {
-            driver.quit();
+        if (getDriver() != null) {
+            getDriver().quit();
         }
     }
 
@@ -69,22 +69,22 @@ public class BaseTest {
         switch (browserName.toLowerCase()) {
             case "chrome":
                 WebDriverManager.chromedriver().setup();
-                driver = new ChromeDriver(getChromeOptions());
+                setDriver(new ChromeDriver(getChromeOptions()));
                 break;
             case "firefox":
                 WebDriverManager.firefoxdriver().setup();
-                driver = new FirefoxDriver(getFirefoxOptions());
+                setDriver(new FirefoxDriver(getFirefoxOptions()));
                 break;
             case "edge":
                 WebDriverManager.edgedriver().setup();
-                driver = new EdgeDriver(getEdgeOptions());
+                setDriver(new EdgeDriver(getEdgeOptions()));
                 break;
             default:
                 throw new IllegalArgumentException("Invalid browser name: " + browserName);
         }
 
         configureDriver();
-        return driver;
+        return getDriver();
     }
 
     private Properties loadProperties() throws IOException {
@@ -96,12 +96,12 @@ public class BaseTest {
 
     private ChromeOptions getChromeOptions() {
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless"); // Enable for docker
-        options.addArguments("--no-sandbox"); // Enable for docker
-        options.addArguments("--disable-gpu"); // Enable for docker
-        options.setBinary("/usr/bin/google-chrome"); // Enable for docker
-        options.addArguments("--remote-allow-origins=*"); // Enable for docker
-        options.addArguments("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"); // Enable for docker
+//        options.addArguments("--headless"); // Enable for docker
+//        options.addArguments("--no-sandbox"); // Enable for docker
+//        options.addArguments("--disable-gpu"); // Enable for docker
+//        options.setBinary("/usr/bin/google-chrome"); // Enable for docker
+//        options.addArguments("--remote-allow-origins=*"); // Enable for docker
+//        options.addArguments("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"); // Enable for docker
         options.addArguments("--window-size=1920,1080");
         return options;
     }
@@ -118,24 +118,24 @@ public class BaseTest {
     }
 
     private void configureDriver() {
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
-        driver.manage().window().maximize();
+        getDriver().manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
+        getDriver().manage().window().maximize();
 
-        dmHomePageHelper = new DmHomePageHelper(driver);
-        userDashboardPageHelper = new UserDashboardPageHelper(driver);
-        dmSearchPageHelper = new DmSearchPageHelper(driver);
-        dmServicesPageHelper = new DmServicesPageHelper(driver);
+        dmHomePageHelper = new DmHomePageHelper(getDriver());
+        userDashboardPageHelper = new UserDashboardPageHelper(getDriver());
+        dmSearchPageHelper = new DmSearchPageHelper(getDriver());
+        dmServicesPageHelper = new DmServicesPageHelper(getDriver());
     }
 
     @Parameters("browser")
     private void closeExtraTabs(String browser) {
         String browserName = getBrowserName();
         if (browser.equalsIgnoreCase(browserName)) {
-            Set<String> windowHandles = driver.getWindowHandles();
+            Set<String> windowHandles = getDriver().getWindowHandles();
             if (windowHandles.size() > 1) {
-                driver.switchTo().window(windowHandles.toArray(new String[0])[1]);
-                driver.close();
-                driver.switchTo().window(windowHandles.toArray(new String[0])[0]);
+                getDriver().switchTo().window(windowHandles.toArray(new String[0])[1]);
+                getDriver().close();
+                getDriver().switchTo().window(windowHandles.toArray(new String[0])[0]);
             }
         }
     }
@@ -184,7 +184,7 @@ public class BaseTest {
 
     public String captureScreenshot(String testCaseName) {
         try {
-            TakesScreenshot ts = (TakesScreenshot) driver;
+            TakesScreenshot ts = (TakesScreenshot) getDriver();
             File source = ts.getScreenshotAs(OutputType.FILE);
             String timestamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
             String screenshotFileName = testCaseName + "_" + timestamp + ".png";
@@ -213,7 +213,7 @@ public class BaseTest {
                 String password = row.getCell(1).getStringCellValue();
                 String fullName = row.getCell(2).getStringCellValue();
 
-                data.add(new Object[]{username, password , fullName});
+                data.add(new Object[]{username, password, fullName});
             }
 
         } catch (IOException e) {
@@ -246,20 +246,27 @@ public class BaseTest {
         return data.iterator();
     }
 
+    public DmHomePageHelper getDmHomePageHelper() {
+        return dmHomePageHelper;
+    }
 
-    public DmHomePageHelper getDmHomePageHelper(){return dmHomePageHelper;}
+    public UserDashboardPageHelper getUserDashboardPageHelper() {
+        return userDashboardPageHelper;
+    }
 
-    public UserDashboardPageHelper getUserDashboardPageHelper(){return userDashboardPageHelper;}
+    public DmSearchPageHelper getDmSearchPageHelper() {
+        return dmSearchPageHelper;
+    }
 
-    public DmSearchPageHelper getDmSearchPageHelper(){return dmSearchPageHelper;}
-
-    public DmServicesPageHelper getDmServicesPageHelper(){return dmServicesPageHelper;}
+    public DmServicesPageHelper getDmServicesPageHelper() {
+        return dmServicesPageHelper;
+    }
 
     public static WebDriver getDriver() {
-        return driver;
+        return driverThreadLocal.get();
     }
 
     public void setDriver(WebDriver driver) {
-        this.driver = driver;
+        driverThreadLocal.set(driver);
     }
 }

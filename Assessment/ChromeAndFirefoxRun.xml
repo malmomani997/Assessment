@@ -5,6 +5,14 @@
         <listener class-name="DmTask.TestHelpers.Listeners"></listener>
     </listeners>
 
+    <test name="ChromeTest">
+        <parameter name="browser" value="chrome" />
+        <classes>
+            <class name="DmTask.TestScenarios.DMTestCases"/>
+        </classes>
+    </test>
+
+
     <test name="FirefoxTest">
         <parameter name="browser" value="firefox" />
         <classes>
