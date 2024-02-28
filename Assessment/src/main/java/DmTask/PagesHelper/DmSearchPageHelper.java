@@ -20,6 +20,14 @@ public class DmSearchPageHelper extends SharedElementsHelper {
     private @FindBy(xpath = "//div//h2")
     WebElement searchedNewsTitle;
 
+    private @FindBy(id = "scrollable")
+    WebElement searchResultBox;
+
+    public WebElement getSearchResultBox() {
+        waitForElementToAppearWithFindElement(searchResultBox);
+        return searchResultBox;
+    }
+
     public WebElement getSearchedNewsTitle() {
         waitForElementToAppearWithFindElement(searchedNewsTitle);
         return searchedNewsTitle;

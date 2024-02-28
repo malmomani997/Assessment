@@ -48,7 +48,6 @@ public class BaseTest {
     public void setUp(@Optional("chrome") String browser) throws IOException {
         setDriver(initializeDriver(browser));
         getDriver().get("https://www.dm.gov.ae/");
-        closeExtraTabs(browser);
     }
 
     @AfterMethod(alwaysRun = true)
@@ -96,12 +95,12 @@ public class BaseTest {
 
     private ChromeOptions getChromeOptions() {
         ChromeOptions options = new ChromeOptions();
-//        options.addArguments("--headless"); // Enable for docker
-//        options.addArguments("--no-sandbox"); // Enable for docker
-//        options.addArguments("--disable-gpu"); // Enable for docker
-//        options.setBinary("/usr/bin/google-chrome"); // Enable for docker
-//        options.addArguments("--remote-allow-origins=*"); // Enable for docker
-//        options.addArguments("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"); // Enable for docker
+        options.addArguments("--headless"); // Enable for docker
+        options.addArguments("--no-sandbox"); // Enable for docker
+        options.addArguments("--disable-gpu"); // Enable for docker
+        options.setBinary("/usr/bin/google-chrome"); // Enable for docker
+        options.addArguments("--remote-allow-origins=*"); // Enable for docker
+        options.addArguments("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"); // Enable for docker
         options.addArguments("--window-size=1920,1080");
         return options;
     }
@@ -109,6 +108,10 @@ public class BaseTest {
     private FirefoxOptions getFirefoxOptions() {
         FirefoxOptions options = new FirefoxOptions();
         FirefoxProfile profile = new FirefoxProfile();
+        options.addArguments("--headless");
+        options.addArguments("--window-size=1920,1080");
+        profile.setPreference("general.useragent.override", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3");
+        System.setProperty("webdriver.firefox.bin", "/usr/bin/firefox");
         options.setProfile(profile);
         return options;
     }
@@ -125,29 +128,6 @@ public class BaseTest {
         userDashboardPageHelper = new UserDashboardPageHelper(getDriver());
         dmSearchPageHelper = new DmSearchPageHelper(getDriver());
         dmServicesPageHelper = new DmServicesPageHelper(getDriver());
-    }
-
-    @Parameters("browser")
-    private void closeExtraTabs(String browser) {
-        String browserName = getBrowserName();
-        if (browser.equalsIgnoreCase(browserName)) {
-            Set<String> windowHandles = getDriver().getWindowHandles();
-            if (windowHandles.size() > 1) {
-                getDriver().switchTo().window(windowHandles.toArray(new String[0])[1]);
-                getDriver().close();
-                getDriver().switchTo().window(windowHandles.toArray(new String[0])[0]);
-            }
-        }
-    }
-
-    private String getBrowserName() {
-        Properties prop;
-        try {
-            prop = loadProperties();
-        } catch (IOException e) {
-            throw new RuntimeException("Error loading properties: " + e.getMessage());
-        }
-        return prop.getProperty("browser");
     }
 
     @BeforeSuite

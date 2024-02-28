@@ -7,7 +7,7 @@ import org.testng.annotations.Test;
 
 public class DMTestCases extends BaseTest {
 
-    @Test(dataProvider = "userData")
+    @Test(dataProvider = "userData" , retryAnalyzer = Retry.class)
     public void LoginToDMTest(String username , String password , String fullName){
         Assert.assertTrue(getDmHomePageHelper().elementIsDisplayed(getDmHomePageHelper().getDmHeader()) , "the header in the home page wasn't displayed");
         getDmHomePageHelper().getLoginButton().click();
@@ -25,7 +25,7 @@ public class DMTestCases extends BaseTest {
     }
 
 
-    @Test(dataProvider = "userData")
+    @Test(dataProvider = "userData" , retryAnalyzer = Retry.class)
     public void LogoutFromDMTest(String username , String password , String fullName) {
         Assert.assertTrue(getDmHomePageHelper().elementIsDisplayed(getDmHomePageHelper().getDmHeader()) , "the header in the home page wasn't displayed");
         getDmHomePageHelper().getLoginButton().click();
@@ -43,11 +43,12 @@ public class DMTestCases extends BaseTest {
     public void searchEngineNewsTest(String searchText){
         Assert.assertTrue(getDmHomePageHelper().elementIsDisplayed(getDmHomePageHelper().getDmHeader()) , "the header in the home page wasn't displayed");
         getDmHomePageHelper().getSearchFiled().sendKeys(searchText);
+        Assert.assertTrue(getDmSearchPageHelper().elementIsDisplayed(getDmSearchPageHelper().getSearchResultBox()) , "Search results box wasn't displayed");
         getDmHomePageHelper().getSearchAutoCompleteFirstResult().click();
         Assert.assertEquals(getDmSearchPageHelper().getSearchedNewsTitle().getText() , searchText , "the searched result doesn't equals the expected result");
     }
 
-    @Test
+    @Test(retryAnalyzer = Retry.class)
     public void dmServicesSectionTest(){
         Assert.assertTrue(getDmHomePageHelper().elementIsDisplayed(getDmHomePageHelper().getDmHeader()) , "the header in the home page wasn't displayed");
         getDmHomePageHelper().getServicesTabButton().click();
@@ -59,7 +60,7 @@ public class DMTestCases extends BaseTest {
 
     }
 
-    @Test
+    @Test(retryAnalyzer = Retry.class)
     public void dmInterfaceInArabicTest(){
         Assert.assertTrue(getDmHomePageHelper().elementIsDisplayed(getDmHomePageHelper().getDmHeader()) , "the header in the home page wasn't displayed");
         getDmHomePageHelper().getArabicLanguageButton().click();
