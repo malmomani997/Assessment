@@ -14,10 +14,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Print Contents of /app/qa
+    - name: Print Current Directory
       run: |
-        ls -l /app/qa
+        ls -l
+        ls -l /app
 
     - name: Run Automation Tests
       run: |
-        docker run -v $(pwd):/app -w /app/qa malmomani/docker_github_ci_image:tagname mvn -f /app/qa/pom.xml test
+        docker run -v $(pwd):/app -w /app malmomani/docker_github_ci_image:tagname mvn -f /app/qa/pom.xml test
