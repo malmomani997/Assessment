@@ -15,54 +15,15 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Run Automation Tests
-      id: run-tests
       run: |
-        docker run --shm-size=2g -v $(pwd)/Assessment:/Assessment -w /Assessment malmomani/docker_github_ci_image:tagname clean compile test > test_results.txt
-        RESULT=$(grep -oP 'BUILD (SUCCESS|FAILURE)' test_results.txt)
-        PASSED=$(grep "Tests run" test_results.txt | awk '{print $2}')
-        FAILURES=$(grep "Tests run" test_results.txt | awk '{print $6}')
-        echo "RESULT=$RESULT" >> $GITHUB_ENV
-        echo "PASSED=$PASSED" >> $GITHUB_ENV
-        echo "FAILURES=$FAILURES" >> $GITHUB_ENV
+        docker run --shm-size=2g -v $(pwd)/Assessment:/Assessment -w /Assessment malmomani/docker_github_ci_image:tagname clean compile test
 
     - name: Post to Discord
       if: always()
-      env:
-        DISCORD_WEBHOOK_URL: 'https://discord.com/api/webhooks/1212835628358570054/qsqoSYcLhb7iws4kwKKVPc-XtG-b5AbmgdSdJEhNwtUOZp6Zg4dw6J2uXPLO7VLpd5kX'
       run: |
+        DISCORD_WEBHOOK_URL='https://discord.com/api/webhooks/1212835628358570054/qsqoSYcLhb7iws4kwKKVPc-XtG-b5AbmgdSdJEhNwtUOZp6Zg4dw6J2uXPLO7VLpd5kX'
         echo "Discord Webhook URL: $DISCORD_WEBHOOK_URL"
-        RESULT=$(cat $GITHUB_ENV | grep RESULT= | cut -d'=' -f2)
-        PASSED=$(cat $GITHUB_ENV | grep PASSED= | cut -d'=' -f2)
-        FAILURES=$(cat $GITHUB_ENV | grep FAILURES= | cut -d'=' -f2)
-        
-        if [ "$RESULT" == "SUCCESS" ]; then
-          COLOR=3066993
-          TITLE="All Tests Passed!"
-        else
-          COLOR=15158332
-          TITLE="Test Failures Detected"
-        fi
-
-        curl -X POST -H 'Content-type: application/json' \
-          --data "{
-            \"content\": \"\",
-            \"embeds\": [
-              {
-                \"title\": \"$TITLE\",
-                \"color\": $COLOR,
-                \"fields\": [
-                  {
-                    \"name\": \"Passed Tests\",
-                    \"value\": \"$PASSED\",
-                    \"inline\": true
-                  },
-                  {
-                    \"name\": \"Failures\",
-                    \"value\": \"$FAILURES\",
-                    \"inline\": true
-                  }
-                ]
-              }
-            ]
-          }" \
+        # Provide a link to download the artifact
+        curl -v -X POST -H 'Content-type: application/json' \
+          --data '{"content":"GitHub Actions workflow completed!","embeds":[{"title":"HTML Report","description":"[Download HTML Report](https://github.com/'"$GITHUB_REPOSITORY"'/actions/artifacts/'"$GITHUB_RUN_ID"'?workflow=Run+Automation+Tests)"}]}' \
           $DISCORD_WEBHOOK_URL
