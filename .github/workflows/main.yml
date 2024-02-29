@@ -20,4 +20,4 @@ jobs:
 
     - name: Run Automation Tests
       run: |
-        docker run -v $(pwd):/Assessment -w /Assessment malmomani/docker_github_ci_image:tagname mvn -f Assessment/pom.xml compile
+        docker run -v $(pwd):/Assessment -w /Assessment malmomani/docker_github_ci_image:tagname mvn compile
