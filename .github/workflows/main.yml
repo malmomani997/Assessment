@@ -40,7 +40,8 @@ jobs:
         DISCORD_WEBHOOK_URL: 'https://discord.com/api/webhooks/1212835628358570054/qsqoSYcLhb7iws4kwKKVPc-XtG-b5AbmgdSdJEhNwtUOZp6Zg4dw6J2uXPLO7VLpd5kX'
       run: |
         echo "Discord Webhook URL: $DISCORD_WEBHOOK_URL"
-        # Provide a link to download the artifact
+        # Read HTML content and send it as a message
+        HTML_CONTENT=$(cat reports/index.html)
         curl -v -X POST -H 'Content-type: application/json' \
-          --data '{"content":"GitHub Actions workflow completed!","embeds":[{"title":"HTML Report","description":"[Download HTML Report](https://github.com/'"$GITHUB_REPOSITORY"'/actions/artifacts/'"$GITHUB_RUN_ID"'?workflow=Run+Automation+Tests)"}]}' \
+          --data '{"content":"GitHub Actions workflow completed!","embeds":[{"title":"HTML Report","description":"```html\n'"$HTML_CONTENT"'\n```"}]}' \
           $DISCORD_WEBHOOK_URL
