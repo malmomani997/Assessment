@@ -22,6 +22,7 @@ jobs:
       env:
         DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
       run: |
+        echo "Discord Webhook URL: $DISCORD_WEBHOOK_URL"
         curl -X POST -H 'Content-type: application/json' \
           --data '{"content":"GitHub Actions workflow completed!"}' \
-          $DISCORD_WEBHOOK_URL
+          "$DISCORD_WEBHOOK_URL"
