@@ -14,11 +14,9 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Print Current Directory
-      run: |
-        ls -l Assessment
-
     - name: Run Automation Tests
       run: |
-       docker run -v $(pwd)/Assessment:/Assessment -w /Assessment malmomani/docker_github_ci_image:tagname clean compile test
+          docker run --shm-size=2g -v $(pwd)/Assessment:/Assessment -w /Assessment malmomani/docker_github_ci_image:tagname clean compile test
+
+
 
