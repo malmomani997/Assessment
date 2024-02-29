@@ -56,6 +56,40 @@ public class DmHomePageHelper extends SharedElementsHelper {
     private @FindBy(css = "[title='تغيير إلى اللغة الإنجليزية']:first-child")
     WebElement englishLanguageButton;
 
+    private @FindBy(id = "main-footer")
+    WebElement footerSection;
+
+    private @FindBy(xpath = "//img[@alt='Facebook']")
+    WebElement facebookIcon;
+
+    private @FindBy(xpath = "//img[@alt='Twitter']")
+    WebElement twitterIcon;
+
+    private @FindBy(xpath = "//img[@alt='Youtube']")
+    WebElement youtubeIcon;
+
+    private @FindBy(xpath = "//img[@alt='Instagram']")
+    WebElement instagramIcon;
+
+    public WebElement getFacebookIcon() {
+        return facebookIcon;
+    }
+
+    public WebElement getTwitterIcon() {
+        return twitterIcon;
+    }
+
+    public WebElement getYoutubeIcon() {
+        return youtubeIcon;
+    }
+
+    public WebElement getInstagramIcon() {
+        return instagramIcon;
+    }
+
+    public WebElement getFooterSection() {
+        return footerSection;
+    }
 
     public WebElement getEnglishLanguageButton() {
         waitForElementToBeClickable(englishLanguageButton);

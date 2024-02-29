@@ -39,6 +39,7 @@ public class DMTestCases extends BaseTest {
         Assert.assertTrue(getDmHomePageHelper().elementIsDisplayed(getDmHomePageHelper().getDmHeader()) , "the header logo wasn't displayed that means the logout wasn't successful");
     }
 
+
     @Test(dataProvider = "searchData" , retryAnalyzer = Retry.class)
     public void searchEngineNewsTest(String searchText){
         Assert.assertTrue(getDmHomePageHelper().elementIsDisplayed(getDmHomePageHelper().getDmHeader()) , "the header in the home page wasn't displayed");
@@ -68,6 +69,18 @@ public class DMTestCases extends BaseTest {
         Assert.assertEquals(getDmHomePageHelper().getEnglishLanguageButton().getText() , "English" , "the expected translation wasn't displayed");
         Assert.assertEquals(getDmHomePageHelper().getMainPageTab().getText() , "الصفحة الرئيسية" , "the expected translation wasn't displayed");
         Assert.assertEquals(getDmHomePageHelper().getAboutDm().getText() , "عن بلدية دبي" , "the expected translation wasn't displayed");
+    }
+
+
+    @Test(retryAnalyzer = Retry.class)
+    public void verifySocialMediaIconsInFooter(){
+        Assert.assertTrue(getDmHomePageHelper().elementIsDisplayed(getDmHomePageHelper().getDmHeader()) , "the header in the home page wasn't displayed");
+        getDmHomePageHelper().scrollToElement(getDmHomePageHelper().getFooterSection());
+        Assert.assertTrue(getDmHomePageHelper().elementIsDisplayed(getDmHomePageHelper().getFooterSection()), "Footer section isn't displayed");
+        Assert.assertTrue(getDmHomePageHelper().elementIsDisplayed(getDmHomePageHelper().getFacebookIcon()), "Facebook icon wasn't displayed in the footer section");
+        Assert.assertTrue(getDmHomePageHelper().elementIsDisplayed(getDmHomePageHelper().getTwitterIcon()), "Twitter icon wasn't displayed in the footer section");
+        Assert.assertTrue(getDmHomePageHelper().elementIsDisplayed(getDmHomePageHelper().getYoutubeIcon()), "Youtube icon wasn't displayed in the footer section");
+        Assert.assertTrue(getDmHomePageHelper().elementIsDisplayed(getDmHomePageHelper().getInstagramIcon()), "Instagram icon wasn't displayed in the footer section");
     }
 
 }

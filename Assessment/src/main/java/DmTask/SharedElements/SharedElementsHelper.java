@@ -51,6 +51,11 @@ public class SharedElementsHelper {
         js.executeScript("window.scrollBy(0, arguments[0]);", pixelsToScroll);
     }
 
+    public void scrollToElement(WebElement element) {
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].scrollIntoView(true);", element);
+    }
+
     public boolean elementIsDisplayed(WebElement webElement){
 
         return webElement.isDisplayed();
