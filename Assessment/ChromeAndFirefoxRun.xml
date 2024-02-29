@@ -16,12 +16,7 @@
     <test name="FirefoxTest">
         <parameter name="browser" value="firefox" />
         <classes>
-            <class name="DmTask.TestScenarios.DMTestCases">
-            <methods>
-                <exclude name="searchEngineNewsTest"></exclude>
-            </methods>
-            </class>
-
+            <class name="DmTask.TestScenarios.DMTestCases"/>
         </classes>
     </test>
 

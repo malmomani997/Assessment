@@ -6,6 +6,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+
 public class DmHomePageHelper extends SharedElementsHelper {
 
     WebDriver driver;
@@ -55,6 +56,7 @@ public class DmHomePageHelper extends SharedElementsHelper {
     private @FindBy(css = "[title='تغيير إلى اللغة الإنجليزية']:first-child")
     WebElement englishLanguageButton;
 
+
     public WebElement getEnglishLanguageButton() {
         waitForElementToBeClickable(englishLanguageButton);
         return englishLanguageButton;
@@ -76,9 +78,8 @@ public class DmHomePageHelper extends SharedElementsHelper {
         return servicesTabButton;
     }
 
-    public WebElement getSearchAutoCompleteFirstResult() {
-        waitForElementToAppearWithFindElement(searchAutoCompleteFirstResult);
-        waitForElementToBeClickable(searchAutoCompleteFirstResult);
+    public WebElement getSearchAutoCompleteFirstResult(String searchedText) {
+        waitUntilElementTextAppears(searchAutoCompleteFirstResult , searchedText);
         return searchAutoCompleteFirstResult;
     }
 
@@ -112,4 +113,6 @@ public class DmHomePageHelper extends SharedElementsHelper {
         waitForElementToAppearWithFindElement(loginButton);
         return loginButton;
     }
+
+
 }

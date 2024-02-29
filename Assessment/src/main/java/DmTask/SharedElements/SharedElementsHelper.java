@@ -22,8 +22,13 @@ public class SharedElementsHelper {
     }
 
     public void waitForElementToAppearWithFindElement(WebElement Locator) {
-        WebDriverWait w = new WebDriverWait(driver, Duration.ofSeconds(20));
+        WebDriverWait w = new WebDriverWait(driver, Duration.ofSeconds(10));
         w.until(ExpectedConditions.visibilityOf(Locator));
+    }
+
+    public void waitUntilElementTextAppears(WebElement Locator , String searchedText){
+        WebDriverWait w = new WebDriverWait(driver, Duration.ofSeconds(10));
+        w.until(ExpectedConditions.textToBePresentInElement(Locator , searchedText));
     }
 
     public void waitForElementToBeClickable(WebElement Locator) {

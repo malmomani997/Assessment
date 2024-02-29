@@ -45,7 +45,7 @@ public class DMTestCases extends BaseTest {
         getDmHomePageHelper().getSearchFiled().click();
         getDmHomePageHelper().getSearchFiled().sendKeys(searchText);
         Assert.assertTrue(getDmSearchPageHelper().elementIsDisplayed(getDmSearchPageHelper().getSearchResultBox()) , "Search results box wasn't displayed");
-        getDmHomePageHelper().getSearchAutoCompleteFirstResult().click();
+        getDmHomePageHelper().getSearchAutoCompleteFirstResult(searchText).click();
         Assert.assertEquals(getDmSearchPageHelper().getSearchedNewsTitle().getText() , searchText , "the searched result doesn't equals the expected result");
     }
 
