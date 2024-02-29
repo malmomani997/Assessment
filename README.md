@@ -39,15 +39,12 @@ This project contains automated tests for a web application. The tests are imple
 -  Run the following command :- mvn test
 
 # TestNG Configuration
-- `chromeRun.xml` file is used to configure the TestNG test suite.
-
-# Browser Configuration
-- Chrome browser is configured by default. You can switch browsers by changing the `env_browser_param` value.
+- `ChromeAndFirefoxRun.xml` file is used to configure the TestNG test suite.
 
 # Project Structure
 - `src`: Contains the main source code.
 - `pom.xml`: Maven project configuration.
-- `chromeRun.xml`: TestNG suite XML for Chrome browser.
+- `ChromeAndFirefoxRun.xml`: TestNG suite XML for Chrome browser.
 
 # Test Classes
 - `DMTestCases`: Contains various test scenarios for a web application.
