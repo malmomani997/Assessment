@@ -26,6 +26,9 @@ jobs:
         echo "HTML_REPORT: $HTML_REPORT"
         mkdir -p reports
         cp $HTML_REPORT reports/
+        
+    - name: Upload HTML Report Artifact
+      if: always()
       uses: actions/upload-artifact@v2
       with:
         name: test-reports
@@ -39,5 +42,5 @@ jobs:
         echo "Discord Webhook URL: $DISCORD_WEBHOOK_URL"
         # Provide a link to download the artifact
         curl -v -X POST -H 'Content-type: application/json' \
-          --data '{"content":"GitHub Actions workflow completed!","embeds":[{"title":"HTML Report","description":"[Download HTML Report](https://github.com/$GITHUB_REPOSITORY/actions/artifacts/$GITHUB_RUN_ID?workflow=Run+Automation+Tests)"}]}' \
+          --data '{"content":"GitHub Actions workflow completed!","embeds":[{"title":"HTML Report","description":"[Download HTML Report](https://github.com/'"$GITHUB_REPOSITORY"'/actions/artifacts/'"$GITHUB_RUN_ID"'?workflow=Run+Automation+Tests)"}]}' \
           $DISCORD_WEBHOOK_URL
