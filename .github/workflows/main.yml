@@ -44,25 +44,25 @@ jobs:
         fi
 
         curl -X POST -H 'Content-type: application/json' \
-          --data '{
-            "content": "",
-            "embeds": [
+          --data "{
+            \"content\": \"\",
+            \"embeds\": [
               {
-                "title": "'"$TITLE"'",
-                "color": '$COLOR',
-                "fields": [
+                \"title\": \"$TITLE\",
+                \"color\": $COLOR,
+                \"fields\": [
                   {
-                    "name": "Passed Tests",
-                    "value": "'"$PASSED"'",
-                    "inline": true
+                    \"name\": \"Passed Tests\",
+                    \"value\": \"$PASSED\",
+                    \"inline\": true
                   },
                   {
-                    "name": "Failures",
-                    "value": "'"$FAILURES"'",
-                    "inline": true
+                    \"name\": \"Failures\",
+                    \"value\": \"$FAILURES\",
+                    \"inline\": true
                   }
                 ]
               }
             ]
-          }' \
+          }" \
           $DISCORD_WEBHOOK_URL
