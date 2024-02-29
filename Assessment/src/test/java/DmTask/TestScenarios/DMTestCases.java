@@ -83,4 +83,6 @@ public class DMTestCases extends BaseTest {
         Assert.assertTrue(getDmHomePageHelper().elementIsDisplayed(getDmHomePageHelper().getInstagramIcon()), "Instagram icon wasn't displayed in the footer section");
     }
 
+
+    
 }
