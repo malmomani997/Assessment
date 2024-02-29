@@ -20,5 +20,6 @@ jobs:
 
     - name: Run Automation Tests
       run: |
-       docker run -v $(pwd)/Assessment:/Assessment -w /Assessment malmomani/docker_github_ci_image:tagname clean compile test
+            docker run --shm-size=2g -v $(pwd):/app -w /app malmomani/docker_github_ci_image:tagname mvn test
+
 
