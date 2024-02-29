@@ -34,10 +34,13 @@ jobs:
           path: reports
 
       - name: Test Reporter
-        uses: dorny/test-reporter@v1.8.0
+        uses: dorny/test-reporter@v1
         with:
-          reporter: "lcov"
-          path: "reports"
+          artifact: 'test-reports'
+          name: 'Test Report'
+          reporter: 'java-junit'
+          fail-on-error: 'true'
+          fail-on-empty: 'true'
 
       - name: Post to Discord
         if: always()
