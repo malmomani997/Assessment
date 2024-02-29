@@ -26,6 +26,13 @@ jobs:
         echo "HTML_REPORT: $HTML_REPORT"
         mkdir -p reports
         cp $HTML_REPORT reports/
+        
+    - name: Upload HTML Report Artifact
+      if: always()
+      uses: actions/upload-artifact@v2
+      with:
+        name: test-reports
+        path: reports
 
     - name: Post to Discord
       if: always()
@@ -33,9 +40,7 @@ jobs:
         DISCORD_WEBHOOK_URL: 'https://discord.com/api/webhooks/1212835628358570054/qsqoSYcLhb7iws4kwKKVPc-XtG-b5AbmgdSdJEhNwtUOZp6Zg4dw6J2uXPLO7VLpd5kX'
       run: |
         echo "Discord Webhook URL: $DISCORD_WEBHOOK_URL"
-        # Convert HTML to JSON using jq
-        HTML_CONTENT=$(jq -s -R -r @uri < reports/index.html)
-        # Send HTML content to Discord
+        # Provide a link to download the artifact
         curl -v -X POST -H 'Content-type: application/json' \
-          --data '{"content":"GitHub Actions workflow completed!","embeds":[{"title":"HTML Report","description":"```html\n'"$HTML_CONTENT"'\n```"}]}' \
+          --data '{"content":"GitHub Actions workflow completed!","embeds":[{"title":"HTML Report","description":"[Download HTML Report](https://github.com/'"$GITHUB_REPOSITORY"'/actions/artifacts/'"$GITHUB_RUN_ID"'?workflow=Run+Automation+Tests)"}]}' \
           $DISCORD_WEBHOOK_URL
