@@ -31,9 +31,9 @@ jobs:
         DISCORD_WEBHOOK_URL: 'https://discord.com/api/webhooks/1212835628358570054/qsqoSYcLhb7iws4kwKKVPc-XtG-b5AbmgdSdJEhNwtUOZp6Zg4dw6J2uXPLO7VLpd5kX'
       run: |
         echo "Discord Webhook URL: $DISCORD_WEBHOOK_URL"
-        RESULT=${{ env.RESULT }}
-        PASSED=${{ env.PASSED }}
-        FAILURES=${{ env.FAILURES }}
+        RESULT=$(cat $GITHUB_ENV | grep RESULT= | cut -d'=' -f2)
+        PASSED=$(cat $GITHUB_ENV | grep PASSED= | cut -d'=' -f2)
+        FAILURES=$(cat $GITHUB_ENV | grep FAILURES= | cut -d'=' -f2)
         
         if [ "$RESULT" == "SUCCESS" ]; then
           COLOR=3066993
