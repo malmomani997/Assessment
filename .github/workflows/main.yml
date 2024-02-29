@@ -16,12 +16,16 @@ jobs:
 
     - name: Run Automation Tests
       run: |
-        docker run --shm-size=2g -v $(pwd)/Assessment:/Assessment -w /Assessment malmomani/docker_github_ci_image:tagname clean compile test
-    
+        # Run tests and capture Maven test output
+        TEST_OUTPUT=$(docker run --shm-size=2g -v $(pwd)/Assessment:/Assessment -w /Assessment malmomani/docker_github_ci_image:tagname clean compile test)
+        # Capture the location of the HTML report
+        HTML_REPORT=$(find . -type f -name "index.html")
+
     - name: Post to Discord
       if: always()
       run: |
         echo "Discord Webhook URL: https://discord.com/api/webhooks/1212835628358570054/qsqoSYcLhb7iws4kwKKVPc-XtG-b5AbmgdSdJEhNwtUOZp6Zg4dw6J2uXPLO7VLpd5kX"
+        # Include test results and HTML report link in the Discord message
         curl -v -X POST -H 'Content-type: application/json' \
-          --data '{"content":"GitHub Actions workflow completed!"}' \
+          --data "{\"content\":\"GitHub Actions workflow completed!\",\"embeds\":[{\"description\":\"$TEST_OUTPUT\",\"color\":3447003},{\"title\":\"HTML Report\",\"url\":\"file://$HTML_REPORT\"}]}" \
           "https://discord.com/api/webhooks/1212835628358570054/qsqoSYcLhb7iws4kwKKVPc-XtG-b5AbmgdSdJEhNwtUOZp6Zg4dw6J2uXPLO7VLpd5kX"
