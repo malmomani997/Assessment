@@ -18,6 +18,22 @@ jobs:
       run: |
         docker run --shm-size=2g -v $(pwd)/Assessment:/Assessment -w /Assessment malmomani/docker_github_ci_image:tagname clean compile test
 
+    - name: Archive HTML Report
+      if: always()
+      env:
+        HTML_REPORT: 'Assessment/reports/index.html'
+      run: |
+        echo "HTML_REPORT: $HTML_REPORT"
+        mkdir -p reports
+        cp $HTML_REPORT reports/
+
+    - name: Upload HTML Report Artifact
+      if: always()
+      uses: actions/upload-artifact@v2
+      with:
+        name: test-reports
+        path: reports
+
     - name: Post to Discord
       if: always()
       run: |
@@ -25,5 +41,11 @@ jobs:
         echo "Discord Webhook URL: $DISCORD_WEBHOOK_URL"
         # Provide a link to download the artifact
         curl -v -X POST -H 'Content-type: application/json' \
-          --data '{"content":"GitHub Actions workflow completed!","embeds":[{"title":"HTML Report","description":"[Download HTML Report](https://github.com/'"$GITHUB_REPOSITORY"'/actions/artifacts/'"$GITHUB_RUN_ID"'?workflow=Run+Automation+Tests)"}]}' \
+          --data '{"content":"GitHub Actions workflow completed!","embeds":[{"title":"HTML Report","description":"[Download HTML Report](https://github.com/'"$GITHUB_REPOSITORY"'/actions/artifacts/'"$GITHUB_RUN_ID"'/test-reports)"}]}' \
           $DISCORD_WEBHOOK_URL
+
+    - name: Test Reporter
+      uses: dorny/test-reporter@v1.8.0
+      with:
+        name: "test-reports"
+        path: "reports"
