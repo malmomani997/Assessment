@@ -21,9 +21,9 @@ jobs:
         RESULT=$(grep -oP 'BUILD (SUCCESS|FAILURE)' test_results.txt)
         PASSED=$(grep "Tests run" test_results.txt | awk '{print $2}')
         FAILURES=$(grep "Tests run" test_results.txt | awk '{print $6}')
-        echo "::set-output name=result::$RESULT"
-        echo "::set-output name=passed::$PASSED"
-        echo "::set-output name=failures::$FAILURES"
+        echo "RESULT=$RESULT" >> $GITHUB_ENV
+        echo "PASSED=$PASSED" >> $GITHUB_ENV
+        echo "FAILURES=$FAILURES" >> $GITHUB_ENV
 
     - name: Post to Discord
       if: always()
@@ -31,9 +31,9 @@ jobs:
         DISCORD_WEBHOOK_URL: 'https://discord.com/api/webhooks/1212835628358570054/qsqoSYcLhb7iws4kwKKVPc-XtG-b5AbmgdSdJEhNwtUOZp6Zg4dw6J2uXPLO7VLpd5kX'
       run: |
         echo "Discord Webhook URL: $DISCORD_WEBHOOK_URL"
-        RESULT=${{ steps.run-tests.outputs.result }}
-        PASSED=${{ steps.run-tests.outputs.passed }}
-        FAILURES=${{ steps.run-tests.outputs.failures }}
+        RESULT=${{ env.RESULT }}
+        PASSED=${{ env.PASSED }}
+        FAILURES=${{ env.FAILURES }}
         
         if [ "$RESULT" == "SUCCESS" ]; then
           COLOR=3066993
