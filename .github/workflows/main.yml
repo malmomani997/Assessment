@@ -17,8 +17,7 @@ jobs:
     - name: Print Current Directory
       run: |
         ls -l
-        ls -l /github/workspace
 
     - name: Run Automation Tests
       run: |
-        docker run -v $(pwd):/github/workspace -w /github/workspace/Assessment malmomani/docker_github_ci_image:tagname mvn -f /github/workspace/Assessment/pom.xml test
+        docker run -v $(pwd):/Assessment -w /Assessment malmomani/docker_github_ci_image:tagname mvn test
