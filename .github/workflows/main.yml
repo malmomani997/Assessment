@@ -16,7 +16,12 @@ jobs:
 
     - name: Run Automation Tests
       run: |
-          docker run --shm-size=2g -v $(pwd)/Assessment:/Assessment -w /Assessment malmomani/docker_github_ci_image:tagname clean compile test
+        docker run --shm-size=2g -v $(pwd)/Assessment:/Assessment -w /Assessment malmomani/docker_github_ci_image:tagname mvn clean compile test
 
-
-
+    - name: Post to Discord
+      env:
+        DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+      run: |
+        curl -X POST -H 'Content-type: application/json' \
+          --data '{"content":"GitHub Actions workflow completed!"}' \
+          $DISCORD_WEBHOOK_URL
