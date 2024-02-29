@@ -16,4 +16,4 @@ jobs:
 
     - name: Run Automation Tests
       run: |
-        docker run -v $(pwd):/app -w /app/qa malmomani/docker_github_ci_image:tagname mvn test
+        docker run -v $(pwd):/app -w /app/qa malmomani/docker_github_ci_image:tagname mvn -f /app/qa/pom.xml test
