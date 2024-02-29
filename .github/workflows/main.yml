@@ -19,11 +19,9 @@ jobs:
         docker run --shm-size=2g -v $(pwd)/Assessment:/Assessment -w /Assessment malmomani/docker_github_ci_image:tagname clean compile test
     
     - name: Post to Discord
-      if: always() # Execute regardless of the success or failure of previous steps
-      env:
-        DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+      if: always()
       run: |
-        echo "Discord Webhook URL: $DISCORD_WEBHOOK_URL"
+        echo "Discord Webhook URL: https://discord.com/api/webhooks/1212835628358570054/qsqoSYcLhb7iws4kwKKVPc-XtG-b5AbmgdSdJEhNwtUOZp6Zg4dw6J2uXPLO7VLpd5kX"
         curl -v -X POST -H 'Content-type: application/json' \
           --data '{"content":"GitHub Actions workflow completed!"}' \
-          "$DISCORD_WEBHOOK_URL"
+          "https://discord.com/api/webhooks/1212835628358570054/qsqoSYcLhb7iws4kwKKVPc-XtG-b5AbmgdSdJEhNwtUOZp6Zg4dw6J2uXPLO7VLpd5kX"
