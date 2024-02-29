@@ -26,7 +26,7 @@ jobs:
       if: always()
       env:
         DISCORD_WEBHOOK_URL: 'https://discord.com/api/webhooks/1212835628358570054/qsqoSYcLhb7iws4kwKKVPc-XtG-b5AbmgdSdJEhNwtUOZp6Zg4dw6J2uXPLO7VLpd5kX'
-        HTML_REPORT: 'Assessment/index.html'
+        HTML_REPORT: 'Assessment/reports/index.html'
       run: |
         echo "HTML_REPORT: $HTML_REPORT"
         echo "Discord Webhook URL: $DISCORD_WEBHOOK_URL"
