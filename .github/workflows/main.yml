@@ -15,35 +15,54 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Run Automation Tests
+      id: run-tests
       run: |
-        docker run --shm-size=2g -v $(pwd)/Assessment:/Assessment -w /Assessment malmomani/docker_github_ci_image:tagname clean compile test
-
-    - name: Archive HTML Report
-      if: always()
-      env:
-        HTML_REPORT: 'Assessment/reports/index.html'
-      run: |
-        echo "HTML_REPORT: $HTML_REPORT"
-        mkdir -p reports
-        cp $HTML_REPORT reports/
-        
-    - name: Upload HTML Report Artifact
-      if: always()
-      uses: actions/upload-artifact@v2
-      with:
-        name: test-reports
-        path: reports
+        docker run --shm-size=2g -v $(pwd)/Assessment:/Assessment -w /Assessment malmomani/docker_github_ci_image:tagname clean compile test > test_results.txt
+        RESULT=$(grep -oP 'BUILD (SUCCESS|FAILURE)' test_results.txt)
+        PASSED=$(grep "Tests run" test_results.txt | awk '{print $2}')
+        FAILURES=$(grep "Tests run" test_results.txt | awk '{print $6}')
+        echo "::set-output name=result::$RESULT"
+        echo "::set-output name=passed::$PASSED"
+        echo "::set-output name=failures::$FAILURES"
 
     - name: Post to Discord
       if: always()
       env:
         DISCORD_WEBHOOK_URL: 'https://discord.com/api/webhooks/1212835628358570054/qsqoSYcLhb7iws4kwKKVPc-XtG-b5AbmgdSdJEhNwtUOZp6Zg4dw6J2uXPLO7VLpd5kX'
-        GITHUB_RUN_ID: ${{ github.run_id }}
-        GITHUB_REPOSITORY: ${{ github.repository }}
       run: |
         echo "Discord Webhook URL: $DISCORD_WEBHOOK_URL"
-        # Provide a link to download the artifact
-        ARTIFACT_LINK="https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/artifacts/test-reports"
-        curl -v -X POST -H 'Content-type: application/json' \
-          --data '{"content":"GitHub Actions workflow completed!","embeds":[{"title":"HTML Report","description":"[Download HTML Report]('${ARTIFACT_LINK}')"}]}' \
+        RESULT=${{ steps.run-tests.outputs.result }}
+        PASSED=${{ steps.run-tests.outputs.passed }}
+        FAILURES=${{ steps.run-tests.outputs.failures }}
+        
+        if [ "$RESULT" == "SUCCESS" ]; then
+          COLOR=3066993
+          TITLE="All Tests Passed!"
+        else
+          COLOR=15158332
+          TITLE="Test Failures Detected"
+        fi
+
+        curl -X POST -H 'Content-type: application/json' \
+          --data '{
+            "content": "",
+            "embeds": [
+              {
+                "title": "'"$TITLE"'",
+                "color": '$COLOR',
+                "fields": [
+                  {
+                    "name": "Passed Tests",
+                    "value": "'"$PASSED"'",
+                    "inline": true
+                  },
+                  {
+                    "name": "Failures",
+                    "value": "'"$FAILURES"'",
+                    "inline": true
+                  }
+                ]
+              }
+            ]
+          }' \
           $DISCORD_WEBHOOK_URL
