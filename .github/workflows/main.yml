@@ -18,37 +18,43 @@ jobs:
       run: |
         docker run --shm-size=2g -v $(pwd)/Assessment:/Assessment -w /Assessment malmomani/docker_github_ci_image:tagname clean compile test
 
-    - name: Archive HTML Report
-      if: always()
-      env:
-        HTML_REPORT: 'Assessment/reports/index.html'
+    - name: Get Test Results
+      id: test-results
       run: |
-        echo "HTML_REPORT: $HTML_REPORT"
-        mkdir -p reports
-        cp $HTML_REPORT reports/
+        # Extract relevant information from your test execution (example: number of passed/failed tests)
+        passed_tests=$(grep -oP 'Passed: \K\d+' Assessment/reports/index.html)
+        failed_tests=$(grep -oP 'Failed: \K\d+' Assessment/reports/index.html)
+        overall_result=$(grep -oP 'Overall Result: \K\w+' Assessment/reports/index.html)
         
-    - name: Upload HTML Report Artifact
-      if: always()
-      uses: actions/upload-artifact@v2
-      with:
-        name: test-reports
-        path: Assessment/reports
+        # Set output variables
+        echo "::set-output name=passed_tests::$passed_tests"
+        echo "::set-output name=failed_tests::$failed_tests"
+        echo "::set-output name=overall_result::$overall_result"
 
-    - name: Automation Tests Report
-      uses: dorny/test-reporter@v1
-      with:
-        path: 'Assessment/reports/index.html'
-        reporter: 'jest-junit'
-        fail-on-error: 'true'
-        fail-on-empty: 'true'
-        name: 'Test Report'
-      
     - name: Post to Discord
       if: always()
       env:
-        DISCORD_WEBHOOK_URL: 'https://discord.com/api/webhooks/1212835628358570054/qsqoSYcLhb7iws4kwKKVPc-XtG-b5AbmgdSdJEhNwtUOZp6Zg4dw6J2uXPLO7VLpd5kX'
+        DISCORD_WEBHOOK_URL: 'https://discord.com/api/webhooks/your_webhook_url'
       run: |
-        echo "Discord Webhook URL: $DISCORD_WEBHOOK_URL"
-        curl -v -X POST -H 'Content-type: application/json' \
-          --data '{"content":"GitHub Actions workflow completed!","embeds":[{"title":"HTML Report","description":"[Download HTML Report](https://github.com/'"$GITHUB_REPOSITORY"'/actions/artifacts/'"$GITHUB_RUN_ID"'?workflow=Run+Automation+Tests)"}]}' \
+        # Get outputs from previous step
+        passed_tests=${{ steps.test-results.outputs.passed_tests }}
+        failed_tests=${{ steps.test-results.outputs.failed_tests }}
+        overall_result=${{ steps.test-results.outputs.overall_result }}
+
+        # Map colors to the overall result
+        case "$overall_result" in
+          "Success")
+            color="#2ecc71"  # Green
+            ;;
+          "Failure")
+            color="#e74c3c"  # Red
+            ;;
+          *)
+            color="#3498db"  # Blue (default)
+            ;;
+        esac
+
+        # Post custom message to Discord with colors
+        curl -X POST -H 'Content-type: application/json' \
+          --data '{"content":"GitHub Actions workflow completed!\n\nTest Results:\nPassed: `'$passed_tests'`\nFailed: `'$failed_tests'`\nOverall Result: `'$overall_result'`","embeds":[{"color":'$color'}]}' \
           $DISCORD_WEBHOOK_URL
