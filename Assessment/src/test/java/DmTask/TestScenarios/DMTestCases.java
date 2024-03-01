@@ -84,5 +84,15 @@ public class DMTestCases extends BaseTest {
     }
 
 
-    
+    @Test
+    public void verifyMissionAndValueSectionInAboutUs(){
+        Assert.assertTrue(getDmHomePageHelper().elementIsDisplayed(getDmHomePageHelper().getDmHeader()) , "the header in the home page wasn't displayed");
+        getDmHomePageHelper().getAboutUsTopNav().click();
+        Assert.assertTrue(getDmHomePageHelper().elementIsDisplayed(getDmHomePageHelper().getSubMenu()) , "Submenu wasn't displayed");
+        String optionTitle = getDmHomePageHelper().getSecondOptionInSubMenu().getText();
+        getDmHomePageHelper().getSecondOptionInSubMenu().click();
+        Assert.assertTrue(getDmHomePageHelper().elementIsDisplayed(getDmHomePageHelper().getDmHeader()) , "the header in the home page wasn't displayed");
+        Assert.assertEquals(optionTitle , getDmHomePageHelper().getSubmenuPageTitle().getText(), "the name of the option in the submenu and the title page aren't equal");
+    }
+
 }
