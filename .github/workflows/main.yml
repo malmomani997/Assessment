@@ -10,33 +10,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Run Automation Tests
-        run: |
-          docker run --shm-size=2g -v $(pwd)/Assessment:/Assessment -w /Assessment malmomani/docker_github_ci_image:tagname clean compile test
-          
-      - name: Get Test Results
-        id: get_test_results
-        run: |
-          passed=$(awk -F '</strong>' '/<strong>Tests Passed<\/strong>/{print $2}' Assessment/reports/index.html | tr -cd '[:digit:]')
-          failed=$(awk -F '</strong>' '/<strong>Tests Failed<\/strong>/{print $2}' Assessment/reports/index.html | tr -cd '[:digit:]')
-          echo "::set-output name=passed::$passed"
-          echo "::set-output name=failed::$failed"
+    - name: Run Automation Tests
+      run: |
+        docker run --shm-size=2g -v $(pwd)/Assessment:/Assessment -w /Assessment malmomani/docker_github_ci_image:tagname clean compile test
 
-      - name: Post to Discord
-        env:
-          DISCORD_WEBHOOK_URL: 'https://discord.com/api/webhooks/1212835628358570054/qsqoSYcLhb7iws4kwKKVPc-XtG-b5AbmgdSdJEhNwtUOZp6Zg4dw6J2uXPLO7VLpd5kX'
-        run: |
-          passed=${{ steps.get_test_results.outputs.passed }}
-          failed=${{ steps.get_test_results.outputs.failed }}
-          if [ "$failed" -eq 0 ]; then
-            color=":white_check_mark:"
-          else
-            color=":x:"
-          fi
-          message="Testing is done! $color Passed: $passed $color Failed: $failed"
-          curl -X POST -H 'Content-type: application/json' \
-            --data "{\"content\":\"$message\"}" \
-            $DISCORD_WEBHOOK_URL
+    - name: Archive HTML Report
+      if: always()
+      env:
+        HTML_REPORT: 'Assessment/reports/index.html'
+      run: |
+        echo "HTML_REPORT: $HTML_REPORT"
+        mkdir -p reports
+        cp $HTML_REPORT reports/
+
+    - name: Upload HTML Report Artifact
+      if: always()
+      uses: actions/upload-artifact@v2
+      with:
+        name: test-reports
+        path: reports
