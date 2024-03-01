@@ -13,12 +13,17 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
     - name: Run Automation Tests
       run: |
         docker run --shm-size=2g -v $(pwd)/Assessment:/Assessment -w /Assessment malmomani/docker_github_ci_image:tagname clean compile test
 
     - name: Archive HTML Report
-      if: always()
+      if: always()  # This step will always run, even if previous steps fail
       env:
         HTML_REPORT: 'Assessment/reports/index.html'
       run: |
