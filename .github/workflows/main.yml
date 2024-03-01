@@ -7,48 +7,47 @@ on:
 
 jobs:
   test:
+
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Run Automation Tests
-        run: |
-          docker run --shm-size=2g -v $(pwd)/Assessment:/Assessment -w /Assessment malmomani/docker_github_ci_image:tagname clean compile test
+    - name: Run Automation Tests
+      run: |
+        docker run --shm-size=2g -v $(pwd)/Assessment:/Assessment -w /Assessment malmomani/docker_github_ci_image:tagname clean compile test
 
-      - name: Archive HTML Report
-        if: always()
-        env:
-          HTML_REPORT: 'Assessment/reports/index.html'
-        run: |
-          echo "HTML_REPORT: $HTML_REPORT"
-          mkdir -p reports
-          cp $HTML_REPORT reports/
+    - name: Archive HTML Report
+      if: always()
+      env:
+        HTML_REPORT: 'Assessment/reports/index.html'
+      run: |
+        echo "HTML_REPORT: $HTML_REPORT"
+        mkdir -p reports
+        cp $HTML_REPORT reports/
+        
+    - name: Upload HTML Report Artifact
+      if: always()
+      uses: actions/upload-artifact@v2
+      with:
+        name: test-reports
+        path: Assessment/reports
 
-      - name: Upload HTML Report Artifact
-        if: always()
-        uses: actions/upload-artifact@v2
-        with:
-          name: test-reports
-          path: reports
-
-      - name: Test Reporter
-        uses: dorny/test-reporter@v1
-        with:
-          artifact: 'test-reports'
-          name: 'Test Report'
-          reporter: 'java-junit'
-          fail-on-error: 'true'
-          fail-on-empty: 'true'
-
-      - name: Post to Discord
-        if: always()
-        env:
-          DISCORD_WEBHOOK_URL: 'https://discord.com/api/webhooks/1212835628358570054/qsqoSYcLhb7iws4kwKKVPc-XtG-b5AbmgdSdJEhNwtUOZp6Zg4dw6J2uXPLO7VLpd5kX'
-        run: |
-          echo "Discord Webhook URL: $DISCORD_WEBHOOK_URL"
-          # Provide a link to download the artifact
-          curl -v -X POST -H 'Content-type: application/json' \
-            --data '{"content":"GitHub Actions workflow completed!","embeds":[{"title":"HTML Report","description":"[Download HTML Report](https://github.com/'"$GITHUB_REPOSITORY"'/actions/artifacts/'"$GITHUB_RUN_ID"'?workflow=Run+Automation+Tests)"}]}' \
-            $DISCORD_WEBHOOK_URL
+    - name: Test Reporter
+      uses: dorny/test-reporter@v1
+      with:
+        path: 'Assessment/reports/index.html'
+        reporter: 'jest-junit'
+        fail-on-error: 'true'
+        fail-on-empty: 'true'
+      
+    - name: Post to Discord
+      if: always()
+      env:
+        DISCORD_WEBHOOK_URL: 'https://discord.com/api/webhooks/1212835628358570054/qsqoSYcLhb7iws4kwKKVPc-XtG-b5AbmgdSdJEhNwtUOZp6Zg4dw6J2uXPLO7VLpd5kX'
+      run: |
+        echo "Discord Webhook URL: $DISCORD_WEBHOOK_URL"
+        curl -v -X POST -H 'Content-type: application/json' \
+          --data '{"content":"GitHub Actions workflow completed!","embeds":[{"title":"HTML Report","description":"[Download HTML Report](https://github.com/'"$GITHUB_REPOSITORY"'/actions/artifacts/'"$GITHUB_RUN_ID"'?workflow=Run+Automation+Tests)"}]}' \
+          $DISCORD_WEBHOOK_URL
