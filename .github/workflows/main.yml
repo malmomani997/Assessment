@@ -16,14 +16,14 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '14'
+        node-version: '20'  # Updated to Node.js version 20
 
     - name: Run Automation Tests
       run: |
         docker run --shm-size=2g -v $(pwd)/Assessment:/Assessment -w /Assessment malmomani/docker_github_ci_image:tagname clean compile test
 
     - name: Archive HTML Report
-      if: always()  # This step will always run, even if previous steps fail
+      if: always()
       env:
         HTML_REPORT: 'Assessment/reports/index.html'
       run: |
