@@ -34,13 +34,14 @@ jobs:
         name: test-reports
         path: Assessment/reports
 
-    - name: Test Reporter
+    - name: Automation Tests Report
       uses: dorny/test-reporter@v1
       with:
         path: 'Assessment/reports/index.html'
         reporter: 'jest-junit'
         fail-on-error: 'true'
         fail-on-empty: 'true'
+        name: 'Test Report'
       
     - name: Post to Discord
       if: always()
