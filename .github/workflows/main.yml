@@ -7,69 +7,36 @@ on:
 
 jobs:
   test:
-
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Run Automation Tests
-      run: |
-        docker run --shm-size=2g -v $(pwd)/Assessment:/Assessment -w /Assessment malmomani/docker_github_ci_image:tagname clean compile test
+      - name: Run Automation Tests
+        run: |
+          docker run --shm-size=2g -v $(pwd)/Assessment:/Assessment -w /Assessment malmomani/docker_github_ci_image:tagname clean compile test
+          
+      - name: Get Test Results
+        id: get_test_results
+        run: |
+          passed=$(grep -oP 'pass-tests">\K\d+' Assessment/reports/index.html)
+          failed=$(grep -oP 'fail-tests">\K\d+' Assessment/reports/index.html)
+          echo "::set-output name=passed::$passed"
+          echo "::set-output name=failed::$failed"
 
-    - name: Archive HTML Report
-      if: always()
-      env:
-        HTML_REPORT: 'Assessment/reports/index.html'
-      run: |
-        echo "HTML_REPORT: $HTML_REPORT"
-        mkdir -p reports
-        cp $HTML_REPORT reports/
-
-    - name: Upload HTML Report Artifact
-      if: always()
-      uses: actions/upload-artifact@v2
-      with:
-        name: test-reports
-        path: reports
-
-    - name: Get Test Results
-      id: test-results
-      run: |
-        sudo apt-get update
-        sudo apt-get install jq -y
-        passed_tests=$(cat Assessment/reports/index.html | jq -r '.passedTests')
-        failed_tests=$(cat Assessment/reports/index.html | jq -r '.failedTests')
-        overall_result=$(cat Assessment/reports/index.html | jq -r '.overallResult')
-        echo "::set-output name=passed_tests::$passed_tests"
-        echo "::set-output name=failed_tests::$failed_tests"
-        echo "::set-output name=overall_result::$overall_result"
-
-    - name: Post to Discord
-      if: always()
-      env:
-        DISCORD_WEBHOOK_URL: 'https://discord.com/api/webhooks/1212835628358570054/qsqoSYcLhb7iws4kwKKVPc-XtG-b5AbmgdSdJEhNwtUOZp6Zg4dw6J2uXPLO7VLpd5kX'
-      run: |
-        echo "Discord Webhook URL: $DISCORD_WEBHOOK_URL"
-        passed_tests=${{ steps.test-results.outputs.passed_tests }}
-        failed_tests=${{ steps.test-results.outputs.failed_tests }}
-        overall_result=${{ steps.test-results.outputs.overall_result }}
-        
-        if [ "$overall_result" == "passed" ]; then
-          message="Testing is done!\n\n:white_check_mark: Passed: $passed_tests\n:x: Failed: $failed_tests"
-        else
-          message="Testing is done!\n\n:x: Passed: $passed_tests\n:white_check_mark: Failed: $failed_tests"
-        fi
-
-        # Set colors based on overall result
-        if [ "$overall_result" == "passed" ]; then
-          color=3066993
-        else
-          color=15158332
-        fi
-
-        # Send message to Discord
-        curl -X POST -H 'Content-type: application/json' \
-          --data '{"content":"'"$message"'","embeds":[{"title":"Test Results","color":'$color'}]}' \
-          $DISCORD_WEBHOOK_URL
+      - name: Post to Discord
+        env:
+          DISCORD_WEBHOOK_URL: 'https://discord.com/api/webhooks/1212835628358570054/qsqoSYcLhb7iws4kwKKVPc-XtG-b5AbmgdSdJEhNwtUOZp6Zg4dw6J2uXPLO7VLpd5kX'
+        run: |
+          passed=${{ steps.get_test_results.outputs.passed }}
+          failed=${{ steps.get_test_results.outputs.failed }}
+          if [ "$failed" -eq 0 ]; then
+            color=":white_check_mark:"
+          else
+            color=":x:"
+          fi
+          message="Testing is done! $color Passed: $passed $color Failed: $failed"
+          curl -X POST -H 'Content-type: application/json' \
+            --data "{\"content\":\"$message\"}" \
+            $DISCORD_WEBHOOK_URL
