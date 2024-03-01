@@ -71,6 +71,37 @@ public class DmHomePageHelper extends SharedElementsHelper {
     private @FindBy(xpath = "//img[@alt='Instagram']")
     WebElement instagramIcon;
 
+    private @FindBy(id = "menu-item-302268")
+    WebElement aboutUsTopNav;
+
+    private @FindBy(css = "ul[class='sub-menu showMenu']")
+    WebElement subMenu;
+
+    private @FindBy(id = "menu-item-302272")
+    WebElement secondOptionInSubMenu;
+
+    private @FindBy(css = "div[class='container'] h1")
+    WebElement submenuPageTitle;
+
+    public WebElement getSubmenuPageTitle() {
+        waitForElementToAppearWithFindElement(submenuPageTitle);
+        return submenuPageTitle;
+    }
+
+    public WebElement getSecondOptionInSubMenu() {
+        waitForElementToAppearWithFindElement(secondOptionInSubMenu);
+        return secondOptionInSubMenu;
+    }
+
+    public WebElement getSubMenu() {
+        waitForElementToAppearWithFindElement(subMenu);
+        return subMenu;
+    }
+
+    public WebElement getAboutUsTopNav() {
+        return aboutUsTopNav;
+    }
+
     public WebElement getFacebookIcon() {
         return facebookIcon;
     }
