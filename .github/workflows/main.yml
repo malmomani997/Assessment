@@ -20,8 +20,8 @@ jobs:
       - name: Get Test Results
         id: get_test_results
         run: |
-          passed=$(grep -oP 'pass-tests">\K\d+' Assessment/reports/index.html)
-          failed=$(grep -oP 'fail-tests">\K\d+' Assessment/reports/index.html)
+          passed=$(awk -F '</strong>' '/<strong>Tests Passed<\/strong>/{print $2}' Assessment/reports/index.html | tr -cd '[:digit:]')
+          failed=$(awk -F '</strong>' '/<strong>Tests Failed<\/strong>/{print $2}' Assessment/reports/index.html | tr -cd '[:digit:]')
           echo "::set-output name=passed::$passed"
           echo "::set-output name=failed::$failed"
 
