@@ -38,29 +38,29 @@ This project contains automated tests for a web application. The tests are imple
 -  Navigate to the project directory on CMD
 -  Run the following command :- mvn test
 
-# TestNG Configuration
+## TestNG Configuration
 - `ChromeAndFirefoxRun.xml` file is used to configure the TestNG test suite.
 
-# Project Structure
+## Project Structure
 - `src`: Contains the main source code.
 - `pom.xml`: Maven project configuration.
 - `ChromeAndFirefoxRun.xml`: TestNG suite XML for Chrome browser.
 
-# Test Classes
+## Test Classes
 - `DMTestCases`: Contains various test scenarios for a web application.
 
-# Helper Classes
+## Helper Classes
 - `BaseTest`: Sets up WebDriver, manages test setup and teardown, and provides helper methods.
 - `DmHomePageHelper`, `UserDashboardPageHelper`, `DmSearchPageHelper`, `DmServicesPageHelper`: Page helper classes for corresponding pages.
 
-# Data Providers
+## Data Providers
 - `userData`: Provides test data for user-related tests.
 - `searchData`: Provides test data for search-related tests.
 
-# Extent Reports
+## Extent Reports
 - Test reports are generated using Extent Reports and stored in the `reports` directory.
 
-# Docker Configuration
+## Docker Configuration
 - The project includes a Dockerfile for containerization.
 - Steps to run the dockerfile:-
 
