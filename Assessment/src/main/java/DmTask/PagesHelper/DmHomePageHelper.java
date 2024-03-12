@@ -1,13 +1,13 @@
 package DmTask.PagesHelper;
 
-import DmTask.SharedElements.SharedElementsHelper;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 
-public class DmHomePageHelper extends SharedElementsHelper {
+public class DmHomePageHelper extends AbstractPageHelper {
 
     WebDriver driver;
 
